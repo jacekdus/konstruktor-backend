@@ -2,6 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -17,10 +20,25 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('hello', function () {
-    return response()->json(['name' => 'Abigail', 'state' => 'CA']);
+$router->get('people', function () {
+    return response()->json([
+        'data' => [
+            0 => [
+                'firstName' => 'Jacek',
+                'lastName' => 'Dus'
+            ],
+            1 => [
+                'firstName' => 'Karolina',
+                'lastName' => 'Pacek'
+            ],
+        ]
+    ]);
 });
 
 $router->get('foo', function () {
     return 'bar';
+});
+
+$router->get('test', function () {
+    return app('db')->select('SELECT * FROM people');
 });
