@@ -17,10 +17,22 @@ $router->get('/', function () use ($router) {
     return phpinfo();
 });
 
-$router->get('db_test', function () {
-    return app('db')->select("SELECT * FROM Persons");
+$router->group(['prefix' => 'project', 'middleware' => 'auth'], function () use ($router) {
+    $router->post('create', 'ProjectController@create');
+    $router->post('copy', 'ProjectController@copy');
+    $router->post('update', 'ProjectController@update');
+    $router->post('rename/{id}', 'ProjectController@rename');
+    $router->delete('delete/{id}', 'ProjectController@delete');
+    $router->get('{id}', 'ProjectController@get');
 });
 
-$router->get('hello', function () {
-    return 'hello World!';
+$router->get('projects', 'ProjectController@projects');
+
+$router->group(['prefix' => 'user'], function () use ($router) {
+    $router->post('register', 'UserController@register');
+    $router->post('login', 'UserController@login');
+    $router->delete('delete', [
+        'middleware' => 'auth',
+        'uses' => 'UserController@delete'
+    ]);
 });
